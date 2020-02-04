@@ -1,0 +1,177 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% TYPES DEFINITIONS %%%%%%%%%%%%%%%%%%%%%%%%%%
+
+xtype [name: outlook_type,
+    domain: [sunny,overcast,rainy],
+    ordered: no,
+    base: symbolic
+    ].
+
+xtype [name: temperature_type,
+    domain: [hot,mild,cool],
+    ordered: no,
+    base: symbolic
+    ].
+
+xtype [name: humidity_type,
+    domain: [high,normal],
+    ordered: no,
+    base: symbolic
+    ].
+
+xtype [name: windy_type,
+    domain: ['FALSE','TRUE'],
+    ordered: no,
+    base: symbolic
+    ].
+
+xtype [name: play_type,
+    domain: [no,yes],
+    ordered: no,
+    base: symbolic
+    ].
+
+%%%%%%%%%%%%%%%%%%%%%%%%% ATTRIBUTES DEFINITIONS %%%%%%%%%%%%%%%%%%%%%%%%%%
+
+xattr [name: outlook,
+    type: outlook_type,
+    class: simple,
+    comm: in,
+    callback: 'pl.edu.agh.kis.callbacks.OutlookCallback'
+    ].
+
+xattr [name: temperature,
+    type: temperature_type,
+    class: simple,
+    comm: in,
+    callback: 'pl.edu.agh.kis.callbacks.TemperatureCallback'
+    ].
+
+xattr [name: humidity,
+    type: humidity_type,
+    class: simple,
+    comm: in,
+    callback: 'pl.edu.agh.kis.callbacks.HumidityCallback'
+    ].
+
+xattr [name: windy,
+    type: windy_type,
+    class: simple,
+    comm: in,
+    callback: 'pl.edu.agh.kis.callbacks.WindyCallback'
+    ].
+
+xattr [name: play,
+    type: play_type,
+    class: simple,
+    comm: out,
+    abbrev: play1
+    ].
+
+%%%%%%%%%%%%%%%%%%%%%%%% TABLE SCHEMAS DEFINITIONS %%%%%%%%%%%%%%%%%%%%%%%%
+
+%! Position: -97,-35
+xschm 'Play': [outlook,temperature,humidity,windy] ==> [play].
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%% RULES DEFINITIONS %%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+xrule 'Play'/0:
+	[
+		outlook eq overcast,
+		temperature eq any,
+		humidity eq any,
+		windy eq any
+	]
+	==>
+	[
+		play set yes
+	]
+	**>
+	[
+		'pl.edu.agh.kis.actions.PlayAction'
+	].
+	#1
+
+xrule 'Play'/1:
+	[
+		outlook eq any,
+		temperature eq hot,
+		humidity eq any,
+		windy eq any
+	]
+	==>
+	[
+		play set no
+	]
+	**>
+	[
+		'pl.edu.agh.kis.actions.NotPlayAction'
+	].
+	#1
+
+xrule 'Play'/2:
+	[
+		outlook in [sunny,overcast],
+		temperature eq any,
+		humidity in [normal],
+		windy eq any
+	]
+	==>
+	[
+		play set yes
+	]
+	**>
+	[
+		'pl.edu.agh.kis.actions.PlayAction'
+	].
+	#1
+
+xrule 'Play'/3:
+	[
+		outlook eq sunny,
+		temperature eq any,
+		humidity eq any,
+		windy eq any
+	]
+	==>
+	[
+		play set no
+	]
+	**>
+	[
+		'pl.edu.agh.kis.actions.NotPlayAction'
+	].
+	#1
+
+xrule 'Play'/4:
+	[
+		outlook eq any,
+		temperature eq any,
+		humidity eq any,
+		windy eq FALSE
+	]
+	==>
+	[
+		play set yes
+	]
+	**>
+	[
+		'pl.edu.agh.kis.actions.PlayAction'
+	].
+	#1
+
+xrule 'Play'/5:
+	[
+		outlook eq rainy,
+		temperature eq any,
+		humidity eq any,
+		windy eq any
+	]
+	==>
+	[
+		play set no
+	]
+	**>
+	[
+		'pl.edu.agh.kis.actions.NotPlayAction'
+	].
+	#1
