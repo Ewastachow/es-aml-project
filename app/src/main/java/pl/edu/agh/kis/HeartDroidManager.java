@@ -1,6 +1,7 @@
 package pl.edu.agh.kis;
 
 import android.content.Context;
+import android.util.Log;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -19,14 +20,29 @@ import heart.parser.hmr.runtime.Source;
 import heart.parser.hmr.runtime.SourceString;
 import heart.xtt.XTTModel;
 
-public class HeartDroidUtil {
+import static android.content.ContentValues.TAG;
+
+public class HeartDroidManager {
 
     private final XTTModel model;
     private final String[] tablesNames;
+    private State state;
 
-    public HeartDroidUtil(Context context, String hmrPath, String[] tablesNames) throws ParsingSyntaxException, IOException, ModelBuildingException {
+    private HeartDroidManager(Context context, String hmrPath, String[] tablesNames) throws ParsingSyntaxException, IOException, ModelBuildingException {
         this.model = createXttModel(context, hmrPath);
         this.tablesNames = tablesNames;
+        this.state = new State();
+    }
+
+    public static HeartDroidManager setupHeartDroidManager(Context context) {
+        try {
+            String[] targetTablesNames = {"Play"};
+            return new HeartDroidManager(context, "weather_nominal.hmr", targetTablesNames);
+        } catch (ModelBuildingException | ParsingSyntaxException | IOException e) {
+            e.printStackTrace();
+            Log.e(TAG, "Error while loading model");
+            throw new IllegalStateException("Unable to create HeartDroidManager");
+        }
     }
 
     private static XTTModel createXttModel(Context context, String hmrPath) throws ModelBuildingException, ParsingSyntaxException, IOException {
@@ -45,7 +61,7 @@ public class HeartDroidUtil {
         return parser.getModel();
     }
 
-    public State resolveNewState(State state) throws NotInTheDomainException, BuilderException, AttributeNotRegisteredException {
+    public State resolveNewState() throws NotInTheDomainException, BuilderException, AttributeNotRegisteredException {
         HeaRT.dataDrivenInference(model,
                 tablesNames,
                 new Configuration.Builder()
