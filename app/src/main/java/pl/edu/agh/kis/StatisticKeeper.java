@@ -1,5 +1,6 @@
 package pl.edu.agh.kis;
 
+import android.content.Context;
 import android.hardware.SensorEvent;
 import android.util.Log;
 
@@ -13,6 +14,8 @@ public class StatisticKeeper {
     private static final String TAG = StatisticKeeper.class.getSimpleName();
 
     private static ConcurrentHashMap<LocalDateTime, Float> stepsData;
+    public static Context mContext;
+    public static final String NOTIFICATION_CHANNEL_ID = "WALK_NOTIFY";
 
     public static void cleanup() {
         Log.d(TAG, "Cleanup scheduler executed!");

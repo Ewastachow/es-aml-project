@@ -2,6 +2,8 @@ package pl.edu.agh.kis;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
 import android.content.Context;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
@@ -21,6 +23,7 @@ import heart.exceptions.NotInTheDomainException;
 
 import static java.lang.String.format;
 import static pl.edu.agh.kis.HeartDroidManager.setupHeartDroidManager;
+import static pl.edu.agh.kis.StatisticKeeper.NOTIFICATION_CHANNEL_ID;
 
 public class MainActivity extends AppCompatActivity implements SensorEventListener {
 
@@ -37,6 +40,9 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        StatisticKeeper.mContext = this;
+        createNotificationChannel();
 
         heartDroidManager = setupHeartDroidManager(this);
 
@@ -55,6 +61,14 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
             e.printStackTrace();
         }
     };
+
+    private void createNotificationChannel() {
+        NotificationChannel channel = new NotificationChannel(
+                NOTIFICATION_CHANNEL_ID,
+                "WALK_NOTIFICATION",
+                NotificationManager.IMPORTANCE_DEFAULT);
+        getSystemService(NotificationManager.class).createNotificationChannel(channel);
+    }
 
     @Override
     protected void onResume() {
