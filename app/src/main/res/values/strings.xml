@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">es-aml-project</string>
+    <string name="welcome_message">Zostaniesz powiadomiony jeżeli nie będziesz spacerował przez zbyt długi czas!</string>
+    <string name="walking_human_image">Walking human image</string>
 </resources>
