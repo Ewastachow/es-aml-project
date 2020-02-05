@@ -10,6 +10,7 @@ import android.hardware.SensorManager;
 import android.os.Bundle;
 import android.util.Log;
 
+import java.util.Arrays;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -18,6 +19,7 @@ import heart.exceptions.AttributeNotRegisteredException;
 import heart.exceptions.BuilderException;
 import heart.exceptions.NotInTheDomainException;
 
+import static java.lang.String.format;
 import static pl.edu.agh.kis.HeartDroidManager.setupHeartDroidManager;
 
 public class MainActivity extends AppCompatActivity implements SensorEventListener {
@@ -26,11 +28,10 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 
     private HeartDroidManager heartDroidManager;
     private ScheduledExecutorService scheduler = Executors.newSingleThreadScheduledExecutor();
+    private ScheduledExecutorService cleanupScheduler = Executors.newSingleThreadScheduledExecutor();
 
     private SensorManager mSensorManager;
     private Sensor mSensor;
-    private float mStepsSinceReboot;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,28 +40,26 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 
         heartDroidManager = setupHeartDroidManager(this);
 
-        scheduler.scheduleAtFixedRate(scheduled,2, 5, TimeUnit.SECONDS);
+        scheduler.scheduleAtFixedRate(scheduled,10, 10, TimeUnit.SECONDS);
+        cleanupScheduler.scheduleAtFixedRate(StatisticKeeper::cleanup,1, 3, TimeUnit.HOURS);
 
         mSensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
         mSensor = mSensorManager.getDefaultSensor(Sensor.TYPE_STEP_COUNTER);
     }
 
-    final Runnable scheduled = new Runnable() {
-        public void run() {
-            Log.d(TAG, "Scheduler executed!");
-            try {
-                heartDroidManager.resolveNewState();
-            } catch (NotInTheDomainException | AttributeNotRegisteredException | BuilderException e) {
-                e.printStackTrace();
-            }
+    final Runnable scheduled = () -> {
+        Log.d(TAG, "Scheduler executed!");
+        try {
+            heartDroidManager.resolveNewState();
+        } catch (NotInTheDomainException | AttributeNotRegisteredException | BuilderException e) {
+            e.printStackTrace();
         }
     };
 
     @Override
     protected void onResume() {
         super.onResume();
-        mSensorManager.registerListener(this, mSensor,
-                SensorManager.SENSOR_DELAY_NORMAL);
+        mSensorManager.registerListener(this, mSensor, SensorManager.SENSOR_DELAY_NORMAL);
     }
 
     @Override
@@ -72,12 +71,12 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 
     @Override
     public void onSensorChanged(SensorEvent event) {
-        mStepsSinceReboot = event.values[0];
-        Log.i(TAG, "");
+        StatisticKeeper.addSensorEvent(event);
+        Log.d(TAG, format("Accuracy: %d, Timestamp %d, Values: %s", event.accuracy, event.timestamp, Arrays.toString(event.values)));
     }
 
     @Override
     public void onAccuracyChanged(Sensor sensor, int accuracy) {
-        Log.i(TAG, "");
+        Log.i(TAG, format("onAccuracyChanged - Accuracy: %d", accuracy));
     }
 }
