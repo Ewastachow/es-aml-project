@@ -37,7 +37,7 @@ public class InactionTimeInMinutesCallback implements Callback {
         LocalDateTime newestTime = collect.get(0).getKey();
         Float newestSteps = collect.get(0).getValue();
         Duration inaction = Duration.ofHours(24);
-        for (Map.Entry<LocalDateTime, Float> entry: collect) {
+        for (Map.Entry<LocalDateTime, Float> entry : collect) {
             LocalDateTime time = entry.getKey();
             Float steps = entry.getValue();
             boolean isStillInactive = isStillInactive(newestTime, time, newestSteps, steps);
@@ -58,5 +58,5 @@ public class InactionTimeInMinutesCallback implements Callback {
         float stepsDiff = newestSteps - steps;
         return stepsDiff < 20 || stepsDiff / duration < 30;
     }
-    
+
 }

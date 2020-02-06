@@ -15,6 +15,7 @@ import android.util.Log;
 import androidx.annotation.Nullable;
 
 import java.util.Arrays;
+import java.util.Objects;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -36,7 +37,6 @@ public class BackgroundService extends Service implements SensorEventListener {
     private ScheduledExecutorService cleanupScheduler = Executors.newSingleThreadScheduledExecutor();
 
     private SensorManager mSensorManager;
-    private Sensor mSensor;
 
     @Nullable
     @Override
@@ -58,7 +58,7 @@ public class BackgroundService extends Service implements SensorEventListener {
                 NOTIFICATION_CHANNEL_ID,
                 "WALK_NOTIFICATION",
                 android.app.NotificationManager.IMPORTANCE_DEFAULT);
-        getSystemService(NotificationManager.class).createNotificationChannel(channel);
+        Objects.requireNonNull(getSystemService(NotificationManager.class)).createNotificationChannel(channel);
     }
 
     @Override
@@ -76,11 +76,11 @@ public class BackgroundService extends Service implements SensorEventListener {
     public int onStartCommand(Intent intent, int flags, int startId) {
         heartDroidManager = setupHeartDroidManager(this);
 
-        scheduler.scheduleAtFixedRate(scheduled,10, 10, TimeUnit.SECONDS);
-        cleanupScheduler.scheduleAtFixedRate(StatisticKeeper::cleanup,1, 3, TimeUnit.HOURS);
+        scheduler.scheduleAtFixedRate(scheduled, 1, 10, TimeUnit.MINUTES);
+        cleanupScheduler.scheduleAtFixedRate(StatisticKeeper::cleanup, 1, 3, TimeUnit.HOURS);
 
         mSensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
-        mSensor = mSensorManager.getDefaultSensor(Sensor.TYPE_STEP_COUNTER);
+        Sensor mSensor = Objects.requireNonNull(mSensorManager).getDefaultSensor(Sensor.TYPE_STEP_COUNTER);
 
         StatisticKeeper.mContext = this;
         createNotificationChannel();

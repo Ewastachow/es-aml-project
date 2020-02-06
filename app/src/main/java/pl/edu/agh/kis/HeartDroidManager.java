@@ -22,7 +22,7 @@ import heart.xtt.XTTModel;
 
 import static android.content.ContentValues.TAG;
 
-public class HeartDroidManager {
+class HeartDroidManager {
 
     private final XTTModel model;
     private final String[] tablesNames;
@@ -34,7 +34,7 @@ public class HeartDroidManager {
         this.state = new State();
     }
 
-    public static HeartDroidManager setupHeartDroidManager(Context context) {
+    static HeartDroidManager setupHeartDroidManager(Context context) {
         try {
             String[] targetTablesNames = {"WalkNotify"};
             return new HeartDroidManager(context, "walk_notification.hmr", targetTablesNames);
@@ -61,12 +61,12 @@ public class HeartDroidManager {
         return parser.getModel();
     }
 
-    public State resolveNewState() throws NotInTheDomainException, BuilderException, AttributeNotRegisteredException {
+    void resolveNewState() throws NotInTheDomainException, BuilderException, AttributeNotRegisteredException {
         HeaRT.dataDrivenInference(model,
                 tablesNames,
                 new Configuration.Builder()
                         .setInitialState(state)
                         .build());
-        return HeaRT.getWm().getCurrentState(model);
+        HeaRT.getWm().getCurrentState(model);
     }
 }

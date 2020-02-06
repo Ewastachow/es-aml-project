@@ -14,17 +14,17 @@ public class StatisticKeeper {
     private static final String TAG = StatisticKeeper.class.getSimpleName();
 
     private static ConcurrentHashMap<LocalDateTime, Float> stepsData;
-    public static Context mContext;
-    public static final String NOTIFICATION_CHANNEL_ID = "WALK_NOTIFY";
+    static Context mContext;
+    static final String NOTIFICATION_CHANNEL_ID = "WALK_NOTIFY";
 
-    public static void cleanup() {
+    static void cleanup() {
         Log.d(TAG, "Cleanup scheduler executed!");
         if (stepsData == null) {
             stepsData = new ConcurrentHashMap<>();
         }
         ConcurrentHashMap<LocalDateTime, Float> cleanedStepsData = new ConcurrentHashMap<>();
         for (Map.Entry e : stepsData.entrySet()) {
-            LocalDate eLocalDate = ((LocalDateTime)e.getKey()).toLocalDate();
+            LocalDate eLocalDate = ((LocalDateTime) e.getKey()).toLocalDate();
             if (eLocalDate.isAfter(LocalDate.now().minusDays(2))) {
                 cleanedStepsData.put((LocalDateTime) e.getKey(), (Float) e.getValue());
             }
@@ -32,7 +32,7 @@ public class StatisticKeeper {
         stepsData = cleanedStepsData;
     }
 
-    public static void addSensorEvent(SensorEvent event) {
+    static void addSensorEvent(SensorEvent event) {
         if (stepsData == null) {
             stepsData = new ConcurrentHashMap<>();
         }
