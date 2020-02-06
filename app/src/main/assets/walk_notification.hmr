@@ -25,7 +25,7 @@ xtype [name: hour_type,
     base: numeric
     ].
 
-xtype [name: play_type,
+xtype [name: walk_notify_type,
     domain: [no,yes],
     ordered: no,
     base: symbolic
@@ -68,31 +68,31 @@ xattr [name: hour,
     callback: 'pl.edu.agh.kis.callbacks.HourCallback'
     ].
 
-xattr [name: play,
-    type: play_type,
+xattr [name: walk_notify,
+    type: walk_notify_type,
     class: simple,
     comm: out,
-    abbrev: play1
+    abbrev: walk1
     ].
 
 %%%%%%%%%%%%%%%%%%%%%%%% TABLE SCHEMAS DEFINITIONS %%%%%%%%%%%%%%%%%%%%%%%%
 
 %! Position: -97,-35
-xschm 'Play': [today_steps,twenty_four_hours_steps,inaction_time,last_hour_steps,hour] ==> [play].
+xschm 'WalkNotify': [today_steps,twenty_four_hours_steps,inaction_time,last_hour_steps,hour] ==> [walk_notify].
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%% RULES DEFINITIONS %%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-xrule 'Play'/1:
+xrule 'WalkNotify'/1:
     [
         today_steps in [0 to 10000],
         twenty_four_hours_steps in [0 to 10000],
         inaction_time eq any,
         last_hour_steps eq any,
-        hour in [5 to 7]
+        hour in [0 to 7]
     ]
     ==>
     [
-        play set yes
+        walk_notify set yes
     ]
     **>
     [
@@ -100,17 +100,17 @@ xrule 'Play'/1:
     ].
     #1
 
-xrule 'Play'/2:
+xrule 'WalkNotify'/2:
     [
         today_steps in [0 to 10000],
         twenty_four_hours_steps in [0 to 10000],
         inaction_time eq any,
         last_hour_steps eq any,
-        hour in [5 to 7]
+        hour in [0 to 7]
     ]
     ==>
     [
-        play set yes
+        walk_notify set yes
     ]
     **>
     [
@@ -118,17 +118,17 @@ xrule 'Play'/2:
     ].
     #1
 
-xrule 'Play'/3:
+xrule 'WalkNotify'/3:
     [
         today_steps in [0 to 10000],
         twenty_four_hours_steps in [0 to 10000],
         inaction_time eq any,
         last_hour_steps eq any,
-        hour in [5 to 7]
+        hour in [0 to 7]
     ]
     ==>
     [
-        play set yes
+        walk_notify set yes
     ]
     **>
     [

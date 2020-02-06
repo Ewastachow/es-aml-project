@@ -36,8 +36,8 @@ public class HeartDroidManager {
 
     public static HeartDroidManager setupHeartDroidManager(Context context) {
         try {
-            String[] targetTablesNames = {"Play"};
-            return new HeartDroidManager(context, "weather_nominal.hmr", targetTablesNames);
+            String[] targetTablesNames = {"WalkNotify"};
+            return new HeartDroidManager(context, "walk_notification.hmr", targetTablesNames);
         } catch (ModelBuildingException | ParsingSyntaxException | IOException e) {
             e.printStackTrace();
             Log.e(TAG, "Error while loading model");
