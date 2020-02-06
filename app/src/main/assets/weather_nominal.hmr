@@ -20,6 +20,11 @@ xtype [name: last_hour_steps_type,
     base: numeric
     ].
 
+xtype [name: hour_type,
+    domain: [0.000 to 24.000],
+    base: numeric
+    ].
+
 xtype [name: play_type,
     domain: [no,yes],
     ordered: no,
@@ -56,6 +61,13 @@ xattr [name: last_hour_steps,
     callback: 'pl.edu.agh.kis.callbacks.LastHourStepsCallback'
     ].
 
+xattr [name: hour,
+    type: hour_type,
+    class: simple,
+    comm: in,
+    callback: 'pl.edu.agh.kis.callbacks.HourCallback'
+    ].
+
 xattr [name: play,
     type: play_type,
     class: simple,
@@ -66,7 +78,7 @@ xattr [name: play,
 %%%%%%%%%%%%%%%%%%%%%%%% TABLE SCHEMAS DEFINITIONS %%%%%%%%%%%%%%%%%%%%%%%%
 
 %! Position: -97,-35
-xschm 'Play': [today_steps,twenty_four_hours_steps,inaction_time,last_hour_steps] ==> [play].
+xschm 'Play': [today_steps,twenty_four_hours_steps,inaction_time,last_hour_steps,hour] ==> [play].
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%% RULES DEFINITIONS %%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -75,7 +87,8 @@ xrule 'Play'/1:
         today_steps in [0 to 10000],
         twenty_four_hours_steps in [0 to 10000],
         inaction_time eq any,
-        last_hour_steps eq any
+        last_hour_steps eq any,
+        hour in [5 to 7]
     ]
     ==>
     [
@@ -92,7 +105,8 @@ xrule 'Play'/2:
         today_steps in [0 to 10000],
         twenty_four_hours_steps in [0 to 10000],
         inaction_time eq any,
-        last_hour_steps eq any
+        last_hour_steps eq any,
+        hour in [5 to 7]
     ]
     ==>
     [
@@ -109,7 +123,8 @@ xrule 'Play'/3:
         today_steps in [0 to 10000],
         twenty_four_hours_steps in [0 to 10000],
         inaction_time eq any,
-        last_hour_steps eq any
+        last_hour_steps eq any,
+        hour in [5 to 7]
     ]
     ==>
     [
