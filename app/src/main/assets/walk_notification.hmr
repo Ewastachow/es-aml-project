@@ -84,11 +84,24 @@ xschm 'WalkNotify': [today_steps,twenty_four_hours_steps,inaction_time,last_hour
 
 xrule 'WalkNotify'/1:
     [
-        today_steps in [0 to 10000],
-        twenty_four_hours_steps in [0 to 10000],
-        inaction_time eq any,
-        last_hour_steps eq any,
-        hour in [3 to 7]
+        inaction_time in [45 to 100000],
+        hour in [8 to 20]
+    ]
+    ==>
+    [
+        walk_notify set yes
+    ]
+    **>
+    [
+        'pl.edu.agh.kis.actions.NotifyTooLongInactionTimeAction'
+    ].
+    #1
+
+xrule 'WalkNotify'/2:
+    [
+        last_hour_steps in [0 to 50],
+        inaction_time in [2 to 100000],
+        hour in [9 to 20]
     ]
     ==>
     [
@@ -100,13 +113,11 @@ xrule 'WalkNotify'/1:
     ].
     #1
 
-xrule 'WalkNotify'/2:
+xrule 'WalkNotify'/3:
     [
-        today_steps in [0 to 10000],
-        twenty_four_hours_steps in [0 to 10000],
-        inaction_time eq any,
-        last_hour_steps eq any,
-        hour in [0 to 7]
+        twenty_four_hours_steps in [0 to 8000],
+        inaction_time in [2 to 100000],
+        hour in [10 to 20]
     ]
     ==>
     [
@@ -118,13 +129,11 @@ xrule 'WalkNotify'/2:
     ].
     #1
 
-xrule 'WalkNotify'/3:
+xrule 'WalkNotify'/4:
     [
-        today_steps in [0 to 10000],
-        twenty_four_hours_steps in [0 to 10000],
-        inaction_time eq any,
-        last_hour_steps eq any,
-        hour in [0 to 7]
+        today_steps in [0 to 5000],
+        inaction_time in [2 to 100000],
+        hour in [18 to 22]
     ]
     ==>
     [
@@ -132,7 +141,7 @@ xrule 'WalkNotify'/3:
     ]
     **>
     [
-        'pl.edu.agh.kis.actions.NotifyTooLongInactionTimeAction'
+        'pl.edu.agh.kis.actions.NotifyTooFewStepsTodayAction'
     ].
     #1
 
