@@ -38,4 +38,8 @@ public class StatisticKeeper {
         }
         stepsData.put(LocalDateTime.now(), event.values[0]);
     }
+
+    public static ConcurrentHashMap<LocalDateTime, Float> getStepsData() {
+        return stepsData;
+    }
 }

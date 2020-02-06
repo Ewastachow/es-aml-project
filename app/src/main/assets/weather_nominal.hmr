@@ -1,9 +1,8 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%% TYPES DEFINITIONS %%%%%%%%%%%%%%%%%%%%%%%%%%
 
-xtype [name: outlook_type,
-    domain: [sunny,overcast,rainy],
-    ordered: no,
-    base: symbolic
+xtype [name: today_steps_type,
+    domain: [0.000 to 100000.000],
+    base: numeric
     ].
 
 xtype [name: temperature_type,
@@ -32,11 +31,11 @@ xtype [name: play_type,
 
 %%%%%%%%%%%%%%%%%%%%%%%%% ATTRIBUTES DEFINITIONS %%%%%%%%%%%%%%%%%%%%%%%%%%
 
-xattr [name: outlook,
-    type: outlook_type,
+xattr [name: today_steps,
+    type: today_steps_type,
     class: simple,
     comm: in,
-    callback: 'pl.edu.agh.kis.callbacks.OutlookCallback'
+    callback: 'pl.edu.agh.kis.callbacks.TodayStepsCallback'
     ].
 
 xattr [name: temperature,
@@ -70,13 +69,13 @@ xattr [name: play,
 %%%%%%%%%%%%%%%%%%%%%%%% TABLE SCHEMAS DEFINITIONS %%%%%%%%%%%%%%%%%%%%%%%%
 
 %! Position: -97,-35
-xschm 'Play': [outlook,temperature,humidity,windy] ==> [play].
+xschm 'Play': [today_steps,temperature,humidity,windy] ==> [play].
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%% RULES DEFINITIONS %%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 xrule 'Play'/1:
     [
-        outlook eq overcast,
+        today_steps in [0 to 10000],
         temperature eq any,
         humidity eq any,
         windy eq any
@@ -93,7 +92,7 @@ xrule 'Play'/1:
 
 xrule 'Play'/2:
     [
-        outlook in [sunny,overcast],
+        today_steps in [0 to 10000],
         temperature eq any,
         humidity in [normal],
         windy eq any
@@ -110,7 +109,7 @@ xrule 'Play'/2:
 
 xrule 'Play'/3:
     [
-        outlook eq any,
+        today_steps in [0 to 10000],
         temperature eq any,
         humidity eq any,
         windy eq 'FALSE'
