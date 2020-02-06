@@ -15,7 +15,7 @@ public class InactionTimeInMinutesCallback implements Callback {
 
     @Override
     public void execute(Attribute attribute, WorkingMemory workingMemory) {
-        Log.i(TAG, "Executing HumidityCallback for " + attribute.getName());
+        Log.i(TAG, "Executing InactionTimeInMinutesCallback for " + attribute.getName());
         try {
             workingMemory.setAttributeValue(attribute, new SimpleNumeric(resolveInactionTimeInMinutes()), false);
         } catch (AttributeNotRegisteredException | NotInTheDomainException e) {
