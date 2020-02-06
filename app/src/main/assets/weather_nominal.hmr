@@ -15,10 +15,9 @@ xtype [name: inaction_time_type,
     base: numeric
     ].
 
-xtype [name: windy_type,
-    domain: ['FALSE','TRUE'],
-    ordered: no,
-    base: symbolic
+xtype [name: last_hour_steps_type,
+    domain: [0.000 to 100000.000],
+    base: numeric
     ].
 
 xtype [name: play_type,
@@ -50,11 +49,11 @@ xattr [name: inaction_time,
     callback: 'pl.edu.agh.kis.callbacks.InactionTimeInMinutesCallback'
     ].
 
-xattr [name: windy,
-    type: windy_type,
+xattr [name: last_hour_steps,
+    type: last_hour_steps_type,
     class: simple,
     comm: in,
-    callback: 'pl.edu.agh.kis.callbacks.WindyCallback'
+    callback: 'pl.edu.agh.kis.callbacks.LastHourStepsCallback'
     ].
 
 xattr [name: play,
@@ -67,7 +66,7 @@ xattr [name: play,
 %%%%%%%%%%%%%%%%%%%%%%%% TABLE SCHEMAS DEFINITIONS %%%%%%%%%%%%%%%%%%%%%%%%
 
 %! Position: -97,-35
-xschm 'Play': [today_steps,twenty_four_hours_steps,inaction_time,windy] ==> [play].
+xschm 'Play': [today_steps,twenty_four_hours_steps,inaction_time,last_hour_steps] ==> [play].
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%% RULES DEFINITIONS %%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -76,7 +75,7 @@ xrule 'Play'/1:
         today_steps in [0 to 10000],
         twenty_four_hours_steps in [0 to 10000],
         inaction_time eq any,
-        windy eq any
+        last_hour_steps eq any
     ]
     ==>
     [
@@ -93,7 +92,7 @@ xrule 'Play'/2:
         today_steps in [0 to 10000],
         twenty_four_hours_steps in [0 to 10000],
         inaction_time eq any,
-        windy eq any
+        last_hour_steps eq any
     ]
     ==>
     [
@@ -110,7 +109,7 @@ xrule 'Play'/3:
         today_steps in [0 to 10000],
         twenty_four_hours_steps in [0 to 10000],
         inaction_time eq any,
-        windy eq 'FALSE'
+        last_hour_steps eq any
     ]
     ==>
     [
