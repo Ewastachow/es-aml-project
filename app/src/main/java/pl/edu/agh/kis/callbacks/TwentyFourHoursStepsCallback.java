@@ -2,7 +2,6 @@ package pl.edu.agh.kis.callbacks;
 
 import android.util.Log;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
