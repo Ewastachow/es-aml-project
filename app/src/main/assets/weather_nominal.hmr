@@ -5,10 +5,9 @@ xtype [name: today_steps_type,
     base: numeric
     ].
 
-xtype [name: temperature_type,
-    domain: [hot,mild,cool],
-    ordered: no,
-    base: symbolic
+xtype [name: twenty_four_hours_steps_type,
+    domain: [0.000 to 100000.000],
+    base: numeric
     ].
 
 xtype [name: humidity_type,
@@ -38,11 +37,11 @@ xattr [name: today_steps,
     callback: 'pl.edu.agh.kis.callbacks.TodayStepsCallback'
     ].
 
-xattr [name: temperature,
-    type: temperature_type,
+xattr [name: twenty_four_hours_steps,
+    type: twenty_four_hours_steps_type,
     class: simple,
     comm: in,
-    callback: 'pl.edu.agh.kis.callbacks.TemperatureCallback'
+    callback: 'pl.edu.agh.kis.callbacks.TwentyFourHoursStepsCallback'
     ].
 
 xattr [name: humidity,
@@ -69,14 +68,14 @@ xattr [name: play,
 %%%%%%%%%%%%%%%%%%%%%%%% TABLE SCHEMAS DEFINITIONS %%%%%%%%%%%%%%%%%%%%%%%%
 
 %! Position: -97,-35
-xschm 'Play': [today_steps,temperature,humidity,windy] ==> [play].
+xschm 'Play': [today_steps,twenty_four_hours_steps,humidity,windy] ==> [play].
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%% RULES DEFINITIONS %%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 xrule 'Play'/1:
     [
         today_steps in [0 to 10000],
-        temperature eq any,
+        twenty_four_hours_steps in [0 to 10000],
         humidity eq any,
         windy eq any
     ]
@@ -93,7 +92,7 @@ xrule 'Play'/1:
 xrule 'Play'/2:
     [
         today_steps in [0 to 10000],
-        temperature eq any,
+        twenty_four_hours_steps in [0 to 10000],
         humidity in [normal],
         windy eq any
     ]
@@ -110,7 +109,7 @@ xrule 'Play'/2:
 xrule 'Play'/3:
     [
         today_steps in [0 to 10000],
-        temperature eq any,
+        twenty_four_hours_steps in [0 to 10000],
         humidity eq any,
         windy eq 'FALSE'
     ]
